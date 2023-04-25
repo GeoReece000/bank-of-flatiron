@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import TransactionTable from "./TransactionTable";
+import TransactionForm from "./TransactionForm";
+import TransactionFilter from "./TransactionFilter";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:8001/transactions")
+      .then((response) => response.json())
+      .then((data) => setTransactions(data))
+      .catch((error) => console.log(error));
+  }, []);
+
+  const handleAddTransaction = (newTransaction) => {
+    setTransactions([...transactions, { id: transactions.length + 1, ...newTransaction }]);
+  };
+
+  const filteredTransactions = transactions.filter((transaction) =>
+    transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-}
+
+  return (
+    <div>
+      <TransactionFilter searchTerm={searchTerm} onSearchTermChange={setSearchTerm} />
+      <TransactionTable transactions={filteredTransactions} />
+<TransactionForm onAddTransaction={handleAddTransaction} />
+</div>
+);
+};
 
 export default App;

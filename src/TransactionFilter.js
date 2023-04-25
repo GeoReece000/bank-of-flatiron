@@ -5,7 +5,7 @@ const TransactionFilter = ({ searchTerm, onSearchTermChange }) => {
     <div>
       <label>
         Search Transactions:
-        <input type="text" value={searchTerm} onChange={(e) => onSearchTermChange(e.target.value)} />
+        <input type="text" placeholder="Search here" value={searchTerm} onChange={(e) => onSearchTermChange(e.target.value)} />
       </label>
     </div>
   );
